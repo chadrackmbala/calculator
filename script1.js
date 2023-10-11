@@ -7,6 +7,10 @@ const times = document.getElementById("times");
 const divideby = document.getElementById("divideby");
 const equals = document.getElementById("equals");
 const percentage = document.getElementById("percentage");
+let displayArray = [];
+const backEndOperation = [];
+let backEndOperationJoin;
+let displayArrayJoin;
 
 //PREVENTS DEFAULTS
 
@@ -34,103 +38,90 @@ function clearInput() {
     input.value = "";
 }
 
-//FONCTION ADDITION
+// FONCTION ADDITION
 
 function addition(value) {
-    if (input.value.includes("+") ||
-        input.value.includes("-") ||
-        input.value.includes("×") ||
-        input.value.includes("÷")) {
+    if (input.value.includes("+") && value === "+") {
         const result = eval(input.value);
-        input.value = result;
+        display.textContent = `${input.value} = ${result}`;
+        input.value = `${result} + `;
     } else {
         input.value += value;
     }
 }
 
-//FONCTION SOUSTRACTION
+// FONCTION SOUSTRACTION
 
 function soustraction(value) {
-    if (input.value.includes("+") ||
-        input.value.includes("-") ||
-        input.value.includes("×") ||
-        input.value.includes("÷")) {
+    if (input.value.includes("-") && value === "-") {
         const result = eval(input.value);
-        input.value = result;
+        display.textContent = `${input.value} = ${result}`;
+        input.value = `${result} - `;
     } else {
         input.value += value;
     }
 }
 
-//FONCTION MULTIPLICATION
+//CONVERTION DES SIGNES
 
-function multiplication(value) {
-    if (input.value.includes("+") ||
-        input.value.includes("-") ||
-        input.value.includes("×") ||
-        input.value.includes("÷")) {
-        const result = eval(input.value);
-        input.value = result;
+function signConvarsion(value) {
+    if (value === "×") {
+        value = "*";
+    } else if (value === "÷") {
+        value = "/";
     } else {
-        input.value += value;
+        value = value;
+    }
+    backEndOperation.push(value);
+    backEndOperationJoin = backEndOperation.join('');
+    console.log(backEndOperation);
+    console.log(backEndOperationJoin);
+    if (value === "*") {
+        value = "×";
+    } else if (value === "/") {
+        value = "÷";
+    } else {
+        value = value;
+    }
+    displayArray.push(value);
+    displayArrayJoin = displayArray.join('');
+    input.value += `${value}`;
+    console.log(displayArray);
+    console.log(displayArrayJoin);
+}
+
+// FONCTION DE REALISATION DE CALCUL
+
+function calculation(value) {
+    if(value === "=") {
+        const result = eval(backEndOperationJoin);
+        display.textContent = `${displayArrayJoin} = ${result}`;
+        backEndOperation.splice(0);
+        displayArray.splice(0);
+        input.value = "";
+        console.log(backEndOperation);
     }
 }
 
-//FUNCTION DIVISION
-
-function division(value) {
-    if (input.value.includes("+") ||
-        input.value.includes("-") ||
-        input.value.includes("×") ||
-        input.value.includes("÷")) {
-        const result = eval(input.value);
-        input.value = result;
-    } else {
-        input.value += value;
-    }
-}
-
-//FONCTION OPERATION
-
-function operation() {
-    const result = eval(input.value);
-    input.value = result;
-}
+//FONCTION GLOBALE
 
 function entryInInput(value) {
     switch (value) {
-        case ".":
-            if (input.value.includes(".") || input.value === "") {
-
-            } else {
-                input.value += "."
-                displayArray.push('.');
-                backEndOperation.push('.');
-            }
-            break;
-        case "AC":
-            reset();
-            break;
-        case "C":
-            clearInput();
-            break;
         case "+":
             addition(value);
             break;
         case "-":
             soustraction(value);
             break;
-        case "×":
-            multiplication(value);
-            break;
-        case "÷":
-            division(value);
+        case "AC":
+            reset();
             break;
         case "=":
-            operation(value);
+            calculation(value);
+            backEndOperation.splice(0);
             break;
         default:
-            input.value += value;
+            signConvarsion(value);
             break;
     }
 }
